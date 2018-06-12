@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D23DB59520CC1CF6008C7927 /* Conducter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23DB59420CC1CF6008C7927 /* Conducter.swift */; };
+		D24F3E8320CEC522005C5590 /* TheTruthUntold.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D24F3E8220CEC522005C5590 /* TheTruthUntold.mp3 */; };
+		D24F3E8820CEC597005C5590 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D24F3E8720CEC597005C5590 /* AVFoundation.framework */; };
 		D2D5C24320C795A100566E32 /* QDSpriteNodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D5C24220C795A100566E32 /* QDSpriteNodeButton.swift */; };
 		D2F6F6C220C5666B004144FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F6F6C120C5666B004144FB /* AppDelegate.swift */; };
 		D2F6F6C420C5666B004144FB /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D2F6F6C320C5666B004144FB /* GameScene.sks */; };
@@ -19,6 +22,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D23DB59420CC1CF6008C7927 /* Conducter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conducter.swift; sourceTree = "<group>"; };
+		D24F3E8220CEC522005C5590 /* TheTruthUntold.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = TheTruthUntold.mp3; path = ../../../../../Downloads/TheTruthUntold.mp3; sourceTree = "<group>"; };
+		D24F3E8520CEC532005C5590 /* TheTruthUntold.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = TheTruthUntold.mp3; sourceTree = "<group>"; };
+		D24F3E8720CEC597005C5590 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D2D5C24220C795A100566E32 /* QDSpriteNodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QDSpriteNodeButton.swift; sourceTree = "<group>"; };
 		D2F6F6BE20C5666B004144FB /* LoveLive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoveLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F6F6C120C5666B004144FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,15 +44,34 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D24F3E8820CEC597005C5590 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D24F3E8420CEC52C005C5590 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				D24F3E8520CEC532005C5590 /* TheTruthUntold.mp3 */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
+		D24F3E8620CEC597005C5590 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D24F3E8720CEC597005C5590 /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D2D5C24120C7942D00566E32 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				D24F3E8420CEC52C005C5590 /* Music */,
+				D24F3E8220CEC522005C5590 /* TheTruthUntold.mp3 */,
 				D2F6F6C120C5666B004144FB /* AppDelegate.swift */,
 				D2F6F6C920C5666B004144FB /* GameViewController.swift */,
 				D2F6F6CB20C5666B004144FB /* Main.storyboard */,
@@ -58,6 +84,7 @@
 			children = (
 				D2F6F6C020C5666B004144FB /* LoveLive */,
 				D2F6F6BF20C5666B004144FB /* Products */,
+				D24F3E8620CEC597005C5590 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +107,7 @@
 				D2F6F6D020C5666D004144FB /* LaunchScreen.storyboard */,
 				D2F6F6D320C5666D004144FB /* Info.plist */,
 				D2D5C24220C795A100566E32 /* QDSpriteNodeButton.swift */,
+				D23DB59420CC1CF6008C7927 /* Conducter.swift */,
 			);
 			path = LoveLive;
 			sourceTree = "<group>";
@@ -146,6 +174,7 @@
 				D2F6F6C420C5666B004144FB /* GameScene.sks in Resources */,
 				D2F6F6CF20C5666D004144FB /* Assets.xcassets in Resources */,
 				D2F6F6D220C5666D004144FB /* LaunchScreen.storyboard in Resources */,
+				D24F3E8320CEC522005C5590 /* TheTruthUntold.mp3 in Resources */,
 				D2F6F6C620C5666B004144FB /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,6 +189,7 @@
 				D2F6F6C820C5666B004144FB /* GameScene.swift in Sources */,
 				D2D5C24320C795A100566E32 /* QDSpriteNodeButton.swift in Sources */,
 				D2F6F6CA20C5666B004144FB /* GameViewController.swift in Sources */,
+				D23DB59520CC1CF6008C7927 /* Conducter.swift in Sources */,
 				D2F6F6C220C5666B004144FB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

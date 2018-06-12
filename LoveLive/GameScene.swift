@@ -9,6 +9,7 @@
 import SpriteKit
 import GameplayKit
 import Foundation
+import AVFoundation
 
 class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     var button : [QDSpriteNodeButton] = []
@@ -16,6 +17,7 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     var score = 0
     var musicNote : SKSpriteNode!
     var playnote: SKSpriteNode!
+    var audioplayer : AVAudioPlayer!
     
     override func didMove(to view: SKView) {
         // Set up buttons
@@ -43,6 +45,9 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         let pulseForever = SKAction.repeatForever(pulse)
         musicNote.run(pulseForever)
         
+        // Play song
+        playAudioFile()
+        
         //Set up play note
         run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote),SKAction.wait(forDuration: 1.0)])))
     }
@@ -52,12 +57,41 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         playnote.position = CGPoint(x : 0, y : 175)
         playnote.size = CGSize(width: 150, height: 150)
         self.addChild(playnote)
-        var i = arc4random_uniform(9)
-        let moveToButton = SKAction.move(to: button[Int(i)].position, duration: 3)
+        let i = arc4random_uniform(9)
+        let pos = button[Int(i)].position
+        let initpos = playnote.position
+        var finalpos = CGPoint(x: 0, y: 0)
+        let direction = CGPoint(x: initpos.x - pos.x, y: initpos.y - pos.y)
+        if abs(pos.x) <= abs(pos.y) {
+            if pos.y < 0 {
+                finalpos = CGPoint(x: initpos.x - (direction.x * (initpos.y + 540) / direction.y), y: -540)
+            } else{
+                finalpos = CGPoint(x: initpos.x - (direction.x * (initpos.y - 540) / direction.y), y: 540)
+            }
+        } else{
+            if pos.x < 0{
+                finalpos = CGPoint(x: -960, y: initpos.y - (direction.y * (initpos.x + 960) / direction.x))
+            } else{
+                finalpos = CGPoint(x: 960, y: initpos.y - (direction.y * (initpos.x - 960) / direction.x))
+            }
+        }
+        let moveToButton = SKAction.move(to:finalpos, duration: 3)
         let moveDone = SKAction.removeFromParent()
         playnote.run(SKAction.sequence([moveToButton,moveDone]))
-        
-        
+    }
+    
+    func playAudioFile() {
+        guard let url = Bundle.main.url(forResource: "TheTruthUntold", withExtension: "mp3") else {return}
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            audioplayer = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+            guard let aPlayer  = audioplayer else {return}
+            aPlayer.play()
+        } catch let error {
+            print(error.localizedDescription)
+        }
     }
     
     func addToScore(){
