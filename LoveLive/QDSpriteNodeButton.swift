@@ -18,7 +18,6 @@ class QDSpriteNodeButton: SKSpriteNode {
     
     func touchDown(atPoint pos : CGPoint) {
         
-        alpha = 0.5
     }
     
     func touchUp(atPoint pos : CGPoint) {
@@ -26,7 +25,6 @@ class QDSpriteNodeButton: SKSpriteNode {
         if contains(pos){
             delegate?.spriteNodeButtonPressed(self)
         }
-        alpha = 1.0
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

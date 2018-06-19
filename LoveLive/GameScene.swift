@@ -12,26 +12,22 @@ import Foundation
 import AVFoundation
 
 class GameScene: SKScene, QDSpriteNodeButtonDelegate {
-    var button : [QDSpriteNodeButton] = []
+    var button : [SKSpriteNode] = []
     var scoreLabel : SKLabelNode!
     var score = 0
     var musicNote : SKSpriteNode!
-    var playnote: SKSpriteNode!
+    var playnote: QDSpriteNodeButton!
     var audioplayer : AVAudioPlayer!
+    var noteLabel: SKLabelNode!
     
     override func didMove(to view: SKView) {
         // Set up buttons
         for child in self.children {
             if child.name == "button" {
                 if let child = child as? SKSpriteNode{
-                    button.append(child as! QDSpriteNodeButton)
+                    button.append(child)
                 }
             }
-        }
-        
-        for button in button{
-            button.isUserInteractionEnabled = true
-            button.delegate = self
         }
         
         // Set up score label
@@ -45,18 +41,27 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         let pulseForever = SKAction.repeatForever(pulse)
         musicNote.run(pulseForever)
         
+        // Set up note label
+        noteLabel = childNode(withName: "noteLabel") as! SKLabelNode
+        
         // Play song
         playAudioFile()
         
         //Set up play note
-        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote),SKAction.wait(forDuration: 1.0)])))
+        
+        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote), SKAction.wait(forDuration: 1)])))
+    
+        
     }
     
     func addPlayNote(){
-        playnote = SKSpriteNode(imageNamed: "circlebutton")
+        playnote = QDSpriteNodeButton(imageNamed: "circlebutton")
+        playnote.name = "playnote"
         playnote.position = CGPoint(x : 0, y : 175)
-        playnote.size = CGSize(width: 150, height: 150)
+        playnote.size = CGSize(width: 200, height: 200)
         self.addChild(playnote)
+        playnote.isUserInteractionEnabled = true
+        playnote.delegate = self
         let i = arc4random_uniform(9)
         let pos = button[Int(i)].position
         let initpos = playnote.position
@@ -78,6 +83,7 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         let moveToButton = SKAction.move(to:finalpos, duration: 3)
         let moveDone = SKAction.removeFromParent()
         playnote.run(SKAction.sequence([moveToButton,moveDone]))
+        
     }
     
     func playAudioFile() {
@@ -94,8 +100,34 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         }
     }
     
-    func addToScore(){
-        score += 302
+    
+    // Calculate the min distance between two nodes
+    func mindistance(first: CGPoint) -> Float{
+        var d : [Float] = []
+        for i in 0..<9{
+            let dx = Float(button[i].position.x - first.x)
+            let dy = Float(button[i].position.y - first.y)
+            d.append(sqrt(dx * dx + dy * dy))
+        }
+        return d.min()!
+    }
+    
+    func addToScore(distance:Float){
+        if distance >= 141{
+            noteLabel.text = "Bad"
+            score += 100
+        } else if distance >= 70 && distance < 141 {
+            noteLabel.text = "Good"
+            score += 200
+        } else if distance >= 30 && distance < 70{
+            noteLabel.text = "Great"
+            score += 300
+        } else if distance >= 0 && distance < 30 {
+            noteLabel.text = "Perfect"
+            score += 400
+        }
+        noteLabel.run(SKAction.sequence([SKAction.fadeIn(withDuration: 0.5),SKAction.fadeOut(withDuration: 0.5)]))
+
         scoreLabel.text = "\(score)"
     }
     
@@ -111,7 +143,12 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     
     // MARK: - QDSpriteNodeButtonDelegate
     func spriteNodeButtonPressed(_ button: QDSpriteNodeButton) {
-        print("We are in the scene")
-        addToScore()
+        let d = mindistance(first: button.position)
+        print("\(d)")
+        if d < 200 {
+            let touched = SKAction.removeFromParent()
+            button.run(touched)
+            addToScore(distance: d)
+        }
     }
 }
