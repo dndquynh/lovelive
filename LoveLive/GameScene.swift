@@ -18,9 +18,13 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     var musicNote : SKSpriteNode!
     var playnote: QDSpriteNodeButton!
     var audioplayer : AVAudioPlayer!
+    var pausebutton : QDSpriteNodeButton!
     var noteLabel: SKLabelNode!
     
+    
+    
     override func didMove(to view: SKView) {
+    
         // Set up buttons
         for child in self.children {
             if child.name == "button" {
@@ -29,6 +33,16 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
                 }
             }
         }
+        
+        // Set up pause button
+        pausebutton = QDSpriteNodeButton(imageNamed: "pausebutton")
+        pausebutton.name = "pause"
+        pausebutton.position = CGPoint(x: 550, y: 420)
+        pausebutton.size = CGSize(width: 100, height: 100)
+        self.addChild(pausebutton)
+        pausebutton.isUserInteractionEnabled = true
+        pausebutton.delegate = self
+        
         
         // Set up score label
         scoreLabel = childNode(withName: "scoreLabel") as! SKLabelNode
@@ -48,9 +62,8 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         playAudioFile()
         
         //Set up play note
-        
         run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote), SKAction.wait(forDuration: 1)])))
-    
+        
         
     }
     
@@ -143,12 +156,25 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     
     // MARK: - QDSpriteNodeButtonDelegate
     func spriteNodeButtonPressed(_ button: QDSpriteNodeButton) {
-        let d = mindistance(first: button.position)
-        print("\(d)")
-        if d < 200 {
-            let touched = SKAction.removeFromParent()
-            button.run(touched)
-            addToScore(distance: d)
+        if button.name == "playnote"{
+            let d = mindistance(first: button.position)
+            print("\(d)")
+            if d < 200 {
+                let touched = SKAction.removeFromParent()
+                button.run(touched)
+                addToScore(distance: d)
+            }
+        }
+        else if button.name == "pause" {
+            if !self.isPaused {
+                self.isPaused = true
+                audioplayer.pause()
+                physicsWorld.speed = 0
+            } else {
+                self.isPaused = false
+                audioplayer.play()
+                physicsWorld.speed = 1
+            }
         }
     }
 }

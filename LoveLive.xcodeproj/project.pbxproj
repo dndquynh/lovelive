@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D20B23D920E27BA10002C042 /* MainMenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D20B23D820E27BA10002C042 /* MainMenuScene.sks */; };
+		D20B23DB20E27C680002C042 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20B23DA20E27C680002C042 /* MainMenuScene.swift */; };
 		D2308F4920CF8C69003305ED /* TheTruthUntold.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D24F3E8520CEC532005C5590 /* TheTruthUntold.mp3 */; };
 		D23DB59520CC1CF6008C7927 /* Conducter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23DB59420CC1CF6008C7927 /* Conducter.swift */; };
 		D24F3E8820CEC597005C5590 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D24F3E8720CEC597005C5590 /* AVFoundation.framework */; };
 		D2D5C24320C795A100566E32 /* QDSpriteNodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D5C24220C795A100566E32 /* QDSpriteNodeButton.swift */; };
 		D2F6F6C220C5666B004144FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F6F6C120C5666B004144FB /* AppDelegate.swift */; };
 		D2F6F6C420C5666B004144FB /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D2F6F6C320C5666B004144FB /* GameScene.sks */; };
-		D2F6F6C620C5666B004144FB /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = D2F6F6C520C5666B004144FB /* Actions.sks */; };
 		D2F6F6C820C5666B004144FB /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F6F6C720C5666B004144FB /* GameScene.swift */; };
 		D2F6F6CA20C5666B004144FB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F6F6C920C5666B004144FB /* GameViewController.swift */; };
 		D2F6F6CD20C5666B004144FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2F6F6CB20C5666B004144FB /* Main.storyboard */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D20B23D820E27BA10002C042 /* MainMenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenuScene.sks; sourceTree = "<group>"; };
+		D20B23DA20E27C680002C042 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
 		D23DB59420CC1CF6008C7927 /* Conducter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conducter.swift; sourceTree = "<group>"; };
 		D24F3E8520CEC532005C5590 /* TheTruthUntold.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = TheTruthUntold.mp3; sourceTree = "<group>"; };
 		D24F3E8720CEC597005C5590 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -29,7 +32,6 @@
 		D2F6F6BE20C5666B004144FB /* LoveLive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoveLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F6F6C120C5666B004144FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2F6F6C320C5666B004144FB /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
-		D2F6F6C520C5666B004144FB /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		D2F6F6C720C5666B004144FB /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		D2F6F6C920C5666B004144FB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		D2F6F6CC20C5666B004144FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -99,7 +101,8 @@
 			children = (
 				D2D5C24120C7942D00566E32 /* Supporting files */,
 				D2F6F6C320C5666B004144FB /* GameScene.sks */,
-				D2F6F6C520C5666B004144FB /* Actions.sks */,
+				D20B23D820E27BA10002C042 /* MainMenuScene.sks */,
+				D20B23DA20E27C680002C042 /* MainMenuScene.swift */,
 				D2F6F6C720C5666B004144FB /* GameScene.swift */,
 				D2F6F6CE20C5666D004144FB /* Assets.xcassets */,
 				D2F6F6D020C5666D004144FB /* LaunchScreen.storyboard */,
@@ -169,11 +172,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2F6F6CD20C5666B004144FB /* Main.storyboard in Resources */,
+				D20B23D920E27BA10002C042 /* MainMenuScene.sks in Resources */,
 				D2F6F6C420C5666B004144FB /* GameScene.sks in Resources */,
 				D2F6F6CF20C5666D004144FB /* Assets.xcassets in Resources */,
 				D2F6F6D220C5666D004144FB /* LaunchScreen.storyboard in Resources */,
 				D2308F4920CF8C69003305ED /* TheTruthUntold.mp3 in Resources */,
-				D2F6F6C620C5666B004144FB /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +187,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D20B23DB20E27C680002C042 /* MainMenuScene.swift in Sources */,
 				D2F6F6C820C5666B004144FB /* GameScene.swift in Sources */,
 				D2D5C24320C795A100566E32 /* QDSpriteNodeButton.swift in Sources */,
 				D2F6F6CA20C5666B004144FB /* GameViewController.swift in Sources */,
