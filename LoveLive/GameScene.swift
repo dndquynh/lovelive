@@ -20,10 +20,27 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     var audioplayer : AVAudioPlayer!
     var pausebutton : QDSpriteNodeButton!
     var noteLabel: SKLabelNode!
-    
-    
+    var settingBoard : SKSpriteNode!
+    var quitButton : QDSpriteNodeButton!
+    var resumeButton: QDSpriteNodeButton!
+    var background : SKSpriteNode!
+    var messageBoard : SKSpriteNode!
+    var isGamePaused: Bool = false
+    var isSetup : Bool = false
     
     override func didMove(to view: SKView) {
+        
+        
+        // Set up observer
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+        
+        // set up background
+        background = childNode(withName: "background") as! SKSpriteNode
     
         // Set up buttons
         for child in self.children {
@@ -65,6 +82,34 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote), SKAction.wait(forDuration: 1)])))
         
         
+    }
+    
+    @objc func applicationWillResignActive(_ application: UIApplication) {
+        if !isGamePaused {
+            self.isPaused = true
+            isGamePaused = true
+        }
+    }
+    
+    @objc func applicationDidEnterBackground(_ application: UIApplication) {
+        audioplayer.pause()
+        do {
+                try AVAudioSession.sharedInstance().setActive(false)
+        } catch let error{
+            print(error.localizedDescription)
+        }
+        self.view?.isPaused = true
+    }
+    
+    @objc func applicationWillEnterForeground(_ application: UIApplication){
+        self.view?.isPaused = false
+        if isGamePaused{
+            self.isPaused = true
+            audioplayer.pause()
+            if !isSetup {
+                setup()
+            }
+        }
     }
     
     func addPlayNote(){
@@ -149,10 +194,49 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         score = 0
     }
     
+    func setup() {
+        // Set up setting board
+        settingBoard = SKSpriteNode(imageNamed: "settingboard")
+        settingBoard.size = CGSize(width: 1300, height: 700)
+        settingBoard.position = CGPoint(x: 0, y: -50)
+        settingBoard.zPosition = 1
+        let comment = SKLabelNode(fontNamed: "Pixel Digivolve")
+        comment.fontSize = 70
+        comment.fontColor = UIColor.black
+        comment.text = "Game Paused"
+        comment.position = CGPoint(x: 0, y: 150)
+        comment.zPosition = 2
+        settingBoard.addChild(comment)
+        
+        // Add quit button to the setting board
+        quitButton = QDSpriteNodeButton(imageNamed: "quitbutton")
+        quitButton.size = CGSize(width: 400, height: 200)
+        quitButton.position = CGPoint(x: -200, y: -150)
+        quitButton.zPosition = 2
+        quitButton.name = "quit"
+        quitButton.isUserInteractionEnabled = true
+        quitButton.delegate = self
+        settingBoard.addChild(quitButton)
+        
+        // Add resume button to the setting board
+        resumeButton = QDSpriteNodeButton(imageNamed: "resumebutton")
+        resumeButton.size = CGSize(width: 370, height: 170)
+        resumeButton.position = CGPoint(x: 200, y: -150)
+        resumeButton.zPosition = 2
+        resumeButton.name = "resume"
+        resumeButton.isUserInteractionEnabled = true
+        resumeButton.delegate = self
+        settingBoard.addChild(resumeButton)
+        
+        // Add setting board to the scene
+        self.addChild(settingBoard)
+        
+    }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
+    
     
     // MARK: - QDSpriteNodeButtonDelegate
     func spriteNodeButtonPressed(_ button: QDSpriteNodeButton) {
@@ -166,15 +250,96 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
             }
         }
         else if button.name == "pause" {
-            if !self.isPaused {
+            if !self.isPaused{
+                isGamePaused = true
                 self.isPaused = true
                 audioplayer.pause()
                 physicsWorld.speed = 0
-            } else {
-                self.isPaused = false
-                audioplayer.play()
-                physicsWorld.speed = 1
+                background.zPosition = 1
+                
+                // Set up setting board
+                setup()
+                isSetup = true
             }
+        }
+        else if button.name == "resume" {
+            isGamePaused = false
+            isSetup = false
+            settingBoard.run(SKAction.hide())
+            self.isPaused = false
+            background.zPosition = -1
+            audioplayer.play()
+            physicsWorld.speed = 0
+        }
+        else if button.name == "quit" {
+            settingBoard.isHidden = true
+            
+            // Set up message board
+            messageBoard = SKSpriteNode(imageNamed: "settingboard")
+            messageBoard.size = CGSize(width: 1300, height: 700)
+            messageBoard.position = CGPoint(x: 0, y: -50)
+            messageBoard.zPosition = 1
+            let message = SKLabelNode(fontNamed: "Pixel Digivolve")
+            message.fontSize = 50
+            message.fontColor = UIColor.black
+            message.text = "Are you sure you want to quit?"
+            message.position = CGPoint(x: 0, y: 50)
+            message.zPosition = 2
+            messageBoard.addChild(message)
+            
+            let title = SKLabelNode(fontNamed: "Pixel Digivolve")
+            title.fontSize = 70
+            title.fontColor = UIColor.black
+            title.text = "Quit Game"
+            title.position = CGPoint(x: 0, y: 150)
+            title.zPosition = 2
+            messageBoard.addChild(title)
+            
+            // Add yes and no button to message board
+            let yesButton = QDSpriteNodeButton(imageNamed: "yesbutton")
+            yesButton.size = CGSize(width: 390, height: 205)
+            yesButton.position = CGPoint(x: -200, y: -150)
+            yesButton.zPosition = 2
+            yesButton.name = "yes"
+            yesButton.isUserInteractionEnabled = true
+            yesButton.delegate = self
+            messageBoard.addChild(yesButton)
+            
+            let noButton = QDSpriteNodeButton(imageNamed: "nobutton")
+            noButton.size = CGSize(width: 400, height: 200)
+            noButton.position = CGPoint(x: 200, y: -150)
+            noButton.zPosition = 2
+            noButton.name = "no"
+            noButton.isUserInteractionEnabled = true
+            noButton.delegate = self
+            messageBoard.addChild(noButton)
+            
+            // Add message board to the scene
+            self.addChild(messageBoard)
+        }
+            // If yes, return to mainmenu scene
+        else if button.name == "yes" {
+            if let view = self.view {
+                
+                // Load SKScene from 'Gamescene.sks'
+                if let scene = SKScene(fileNamed: "MainMenuScene") {
+                    
+                    // Set scale mode to scale to fit the window
+                    scene.scaleMode = .aspectFill
+                    
+                    // Present the scene
+                    view.presentScene(scene)
+                }
+                
+                // Debug helpers
+                view.showsFPS = true
+                view.showsPhysics = true
+                view.showsDrawCount = true
+            }
+        }
+        else if button.name == "no" {
+            messageBoard.isHidden = true
+            settingBoard.isHidden = false
         }
     }
 }

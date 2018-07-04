@@ -17,7 +17,6 @@ class QDSpriteNodeButton: SKSpriteNode {
     weak var delegate: QDSpriteNodeButtonDelegate?
     
     func touchDown(atPoint pos : CGPoint) {
-        
     }
     
     func touchUp(atPoint pos : CGPoint) {
