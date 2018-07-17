@@ -10,6 +10,7 @@ import SpriteKit
 import GameplayKit
 import Foundation
 import AVFoundation
+import aubio
 
 class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     var button : [SKSpriteNode] = []
@@ -28,8 +29,27 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
     var isGamePaused: Bool = false
     var isSetup : Bool = false
     
+    // Current position of the song in seconds
+    var songPosition: Double!
+    
+    // Current position of the song in beats
+    var songPosinBeat: Double!
+    
+    // Duration of a beat
+    var secPerBeat: Double!
+    
+    // how much time has passed since the song started
+    var dspTimeSong: Double!
+    
+    var audio: AVAudioPlayer!
+    
+    var bpm: Double = 111
+    
+    var notedata : [[Double]] = [[]]
+    
+    var nextIndex = 0
+    
     override func didMove(to view: SKView) {
-        
         
         // Set up observer
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
@@ -78,11 +98,17 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         // Play song
         playAudioFile()
         
+        secPerBeat = 60 / bpm
+        
         //Set up play note
-        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote), SKAction.wait(forDuration: 1)])))
+        //run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addPlayNote), SKAction.wait(forDuration: 1)])))
         
-        
+        // Beat file
+        var data = readDataFromCSV(fileName: "beattrack", fileType: ".csv")
+        data = cleanRows(file: data!)
+        notedata = csv(data: data!)
     }
+    
     
     @objc func applicationWillResignActive(_ application: UIApplication) {
         if !isGamePaused {
@@ -112,7 +138,7 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         }
     }
     
-    func addPlayNote(){
+    func addPlayNote(pos: CGPoint){
         playnote = QDSpriteNodeButton(imageNamed: "circlebutton")
         playnote.name = "playnote"
         playnote.position = CGPoint(x : 0, y : 175)
@@ -120,8 +146,8 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         self.addChild(playnote)
         playnote.isUserInteractionEnabled = true
         playnote.delegate = self
-        let i = arc4random_uniform(9)
-        let pos = button[Int(i)].position
+        //let i = arc4random_uniform(9)
+        //let pos = button[Int(i)].position
         let initpos = playnote.position
         var finalpos = CGPoint(x: 0, y: 0)
         let direction = CGPoint(x: initpos.x - pos.x, y: initpos.y - pos.y)
@@ -153,6 +179,7 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
             audioplayer = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
             guard let aPlayer  = audioplayer else {return}
             aPlayer.play()
+            dspTimeSong = audioplayer.currentTime
         } catch let error {
             print(error.localizedDescription)
         }
@@ -233,8 +260,68 @@ class GameScene: SKScene, QDSpriteNodeButtonDelegate {
         
     }
     
+    // Read beat data from csv file
+    func readDataFromCSV(fileName:String, fileType: String)-> String!{
+        guard let filepath = Bundle.main.path(forResource: fileName, ofType: fileType)
+            else {
+                return nil
+        }
+        do {
+            var contents = try String(contentsOfFile: filepath, encoding: .utf8)
+            contents = cleanRows(file: contents)
+            return contents
+        } catch {
+            print("File Read Error for file \(filepath)")
+            return nil
+        }
+    }
+    
+    
+    func cleanRows(file:String)->String{
+        var cleanFile = file
+        cleanFile = cleanFile.replacingOccurrences(of: "\r", with: "\n")
+        cleanFile = cleanFile.replacingOccurrences(of: "\n\n", with: "\n")
+        //        cleanFile = cleanFile.replacingOccurrences(of: ";;", with: "")
+        //        cleanFile = cleanFile.replacingOccurrences(of: ";\n", with: "")
+        return cleanFile
+    }
+    
+    func csv(data: String) -> [[Double]] {
+        var result: [[Double]] = []
+        let rows = data.components(separatedBy: "\n")
+        for row in rows{
+            let columns = row.components(separatedBy: ",")
+            if let beatTime = Double(columns[0]) {
+                if let notePos = Double(columns[1]) {
+                    result.append([beatTime,notePos])
+                }
+            }
+        }
+            
+            
+            /*if let beatTime = Double(row){
+                result.append(beatTime)
+            }
+            else {
+                print("Not a valid number.")
+            }*/
+        
+        return result
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        // Calculate the position in seconds
+        songPosition = audioplayer.currentTime
+        //print("\(songPosition)")
+        // Calculate the position in beats
+        songPosinBeat = songPosition / secPerBeat
+        
+        if nextIndex < notedata.count && notedata[nextIndex][0] - 3  < songPosition {
+            print("\(notedata[nextIndex][0] ) || \(songPosition)")
+            addPlayNote(pos : button[Int(notedata[nextIndex][1])].position)
+            nextIndex += 1
+        }
     }
     
     
